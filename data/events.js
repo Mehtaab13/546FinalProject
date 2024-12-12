@@ -50,3 +50,7 @@ export async function getEventsByClass(theClass) {
     }
     return finalEvents;
 }
+
+export async function addEvent(name, description, date, starttime, endtime, location, organizer, feedback, rating, attendees, numberOfAttendees, Class, Poster) {
+    
+}
