@@ -5,6 +5,9 @@ import * as userData from "../data/users.js";
 import * as eventData from "../data/events.js";
 import * as helpers from "../data/helpers.js";
 import { runInNewContext } from 'vm';
+import { getUnpackedSettings } from 'http2';
+import { getEnabledCategories } from 'trace_events';
+import { userInfo } from 'os';
 let activeUser = false;
 /*
 See index.js for description of each route.
@@ -204,6 +207,7 @@ router
     }
   });
 
+
 router
   .route('/events:id')
   .get(async (req, res) => {
@@ -296,4 +300,42 @@ router
       return res.status(404).json({ error: e });
     }
   });
+router.route("/viewcreatedevents").get(async (req, res) => {
+  if(!activeUser) {
+    res.render(path.resolve("/static/landingpage.handlebars"));
+  }
+  let theUser = await userData.getUserByEmail(activeUser);
+  let myEvents = theUser.createdEvents;
+  //This doesn't work and I can't figure out why. Hopefully figure out before the weekend
+  res.render(path.resolve("/static/myCreatedEvents.handlebars"), {events: myEvents});
+});
+router.route("/viewevent:id").get(async (req, res) => {
+  if(!activeUser) {
+    res.render(path.resolve("/static/landingpage.handlebars"));
+  }
+  let created = false;
+  let eventId = req.params.id;
+  let theEvent = await eventData.getEventByID(eventId);
+  let theUser = userData.getUserByEmail(activeUser);
+  let userId = theUser._id;
+  if(userId === eventId) {
+    created = true;
+  }
+  let registered = false;
+  let registeredEvents = theUser.registeredEvents;
+  for(let a = 0; a < registeredEvents.length; a++) {
+    let tempEvent = registeredEvents[a];
+    if(tempEvent._id === eventId) {
+      registered = true;
+      break;
+    }
+  }
+  return res.status(400).json({error: "Need to add a line to render the specific event \
+    handlebars at the bottom of routes.js"});
+  //You can change this line to be how you want.
+  res.render(path.resolve("/static/viewevent.handlebars"), 
+  {event: theEvent, created: created, registered: registered});
+});
+
+
 export default router;

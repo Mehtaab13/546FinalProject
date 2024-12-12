@@ -18,8 +18,15 @@
     Email: <span>{{user.email}}</span></br>
     Class: <span>{{user.class}}</span></br>
     Verified: <span>{{verified}}</span></br>
-    My Registered Events: </br>
+    My Registered Events: 
+    </br>
+    {{#each user.registeredEvents}}
+        <li>     
+            <a href = "/viewevent:{{_id}}">{{name}}</a></br>
+            <div>{{description}}</div>
+        </li>
+    {{/each}}
     </hr>
-    My Created Events: </br> 
+    <a href = "/viewcreatedevents">View My Created Events</a>
 </body>
 </html>

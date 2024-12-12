@@ -27,9 +27,8 @@ Page the user sees after they log in.
    <ol>
     {{#each events}}
         <li>     
-            <!-- 
-            Need to add a description for each event
-            -->
+            <a href = "/viewevent:{{_id}}">{{name}}</a></br>
+            <div>{{description}}</div>
         </li>
     {{/each}}
    </ol>
